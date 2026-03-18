@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kaizen 5S</title>
+    <link rel="icon" type="image/svg+xml" href="assets/kaizen-favicon.svg" />
+    <link rel="alternate icon" type="image/png" sizes="32x32" href="assets/kaizen-logo.png" />
+    <link rel="apple-touch-icon" href="assets/kaizen-logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Sora:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="bg-glow bg-glow--one" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow--two" aria-hidden="true"></div>
+
+    <div class="app-shell" id="appShell">
+      <aside class="sidebar is-open is-pinned" id="sidebar" aria-label="Barra lateral">
+        <div class="sidebar__head">
+          <div class="brand">
+            <span class="brand__logo" aria-hidden="true">
+              <img src="assets/kaizen-logo.png" alt="" class="brand__logo-img" />
+            </span>
+            <span class="brand__name">Kaizen 5S</span>
+          </div>
+
+          <button
+            class="icon-btn icon-btn--pin"
+            id="sidebarToggle"
+            aria-label="Recuar ou expandir sidebar"
+            aria-expanded="true"
+            title="Recuar ou expandir sidebar"
+          >
+            <span class="pin-shape" aria-hidden="true"></span>
+          </button>
+        </div>
+
+        <nav class="sidebar__nav" aria-label="Areas">
+          <button class="nav-item is-active" type="button">
+            <span class="nav-icon nav-icon--study" aria-hidden="true"></span>
+            <span class="nav-text">Estudos</span>
+          </button>
+          <button class="nav-item" type="button">
+            <span class="nav-icon nav-icon--research" aria-hidden="true"></span>
+            <span class="nav-text">Pesquisa</span>
+          </button>
+          <button class="nav-item" type="button">
+            <span class="nav-icon nav-icon--finance" aria-hidden="true"></span>
+            <span class="nav-text">Financeiro</span>
+          </button>
+          <button class="nav-item" type="button">
+            <span class="nav-icon nav-icon--notes" aria-hidden="true"></span>
+            <span class="nav-text">Notas</span>
+          </button>
+          <button class="nav-item" type="button">
+            <span class="nav-icon nav-icon--calendar" aria-hidden="true"></span>
+            <span class="nav-text">Planejamento</span>
+          </button>
+        </nav>
+      </aside>
+
+      <main class="main-panel">
+        <header class="topbar">
+          <div class="topbar__title-wrap">
+            <p class="eyebrow">Plataforma de organizacao</p>
+            <h1>Estudos</h1>
+          </div>
+        </header>
+
+        <section class="dashboard-grid" aria-label="Visao geral de estudos">
+          <article class="panel-card panel-card--feature">
+            <h2>Central de Estudos</h2>
+            <p>
+              Modelo inicial focado em rotina, metas semanais, trilhas de conteudo e revisao.
+              Base pronta para expandir para pesquisa e financeiro.
+            </p>
+            <button type="button" class="cta">Criar bloco de estudo</button>
+          </article>
+
+          <article class="panel-card">
+            <h3>Meta da semana</h3>
+            <p>Concluir 4 modulos e revisar 2 simulados.</p>
+            <div class="progress-track" aria-label="Progresso semanal">
+              <span style="width: 64%"></span>
+            </div>
+          </article>
+
+          <article class="panel-card">
+            <h3>Proxima revisao</h3>
+            <p>Direito Constitucional - Quinta, 19:30</p>
+            <p class="tag">Prioridade alta</p>
+          </article>
+
+          <article class="panel-card">
+            <h3>Foco de hoje</h3>
+            <ul>
+              <li>Pomodoro 1: Teoria</li>
+              <li>Pomodoro 2: Exercicios</li>
+              <li>Pomodoro 3: Revisao ativa</li>
+            </ul>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
