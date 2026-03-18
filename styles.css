@@ -368,6 +368,10 @@ ul {
   transform: translateX(-8px);
 }
 
+.sidebar.is-collapsed .icon-btn {
+  transform: translateX(-7px);
+}
+
 .app-shell.is-sidebar-hidden {
   --layout-sidebar-width: 0px;
 }
