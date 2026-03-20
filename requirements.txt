@@ -3,3 +3,5 @@ uvicorn
 loguru
 firebase-admin
 pytest
+supabase
+python-dotenv

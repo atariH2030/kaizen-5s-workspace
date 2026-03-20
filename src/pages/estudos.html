@@ -3,17 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kaizen 5S</title>
-    <link rel="icon" type="image/svg+xml" href="assets/kaizen-favicon.svg" />
-    <link rel="alternate icon" type="image/png" sizes="32x32" href="assets/kaizen-logo.png" />
-    <link rel="apple-touch-icon" href="assets/kaizen-logo.png" />
+    <title>Estudos - Kaizen 5S</title>
+    <link rel="icon" type="image/svg+xml" href="../../assets/kaizen-favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Sora:wght@500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="src/styles/styles.css" />
+    <link rel="stylesheet" href="../styles/styles.css" />
   </head>
   <body>
     <div class="bg-glow bg-glow--one" aria-hidden="true"></div>
@@ -24,7 +22,7 @@
         <div class="sidebar__head">
           <div class="brand">
             <span class="brand__logo" aria-hidden="true">
-              <img src="assets/kaizen-logo.png" alt="" class="brand__logo-img" />
+              <img src="../../assets/kaizen-logo.png" alt="" class="brand__logo-img" />
             </span>
             <span class="brand__name">Kaizen 5S</span>
           </div>
@@ -41,27 +39,27 @@
         </div>
 
         <nav class="sidebar__nav" aria-label="Areas">
-          <a href="index.html" class="nav-item is-active">
+          <a href="../../index.html" class="nav-item">
             <span class="nav-icon nav-icon--home" aria-hidden="true"></span>
             <span class="nav-text">Início</span>
           </a>
-          <a href="src/pages/estudos.html" class="nav-item">
+          <a href="estudos.html" class="nav-item is-active">
             <span class="nav-icon nav-icon--study" aria-hidden="true"></span>
             <span class="nav-text">Estudos</span>
           </a>
-          <a href="src/pages/pesquisa.html" class="nav-item">
+          <a href="pesquisa.html" class="nav-item">
             <span class="nav-icon nav-icon--research" aria-hidden="true"></span>
             <span class="nav-text">Pesquisa</span>
           </a>
-          <a href="src/pages/financeiro.html" class="nav-item">
+          <a href="financeiro.html" class="nav-item">
             <span class="nav-icon nav-icon--finance" aria-hidden="true"></span>
             <span class="nav-text">Financeiro</span>
           </a>
-          <a href="src/pages/notas.html" class="nav-item">
+          <a href="notas.html" class="nav-item">
             <span class="nav-icon nav-icon--notes" aria-hidden="true"></span>
             <span class="nav-text">Notas</span>
           </a>
-          <a href="src/pages/planejamento.html" class="nav-item">
+          <a href="planejamento.html" class="nav-item">
             <span class="nav-icon nav-icon--calendar" aria-hidden="true"></span>
             <span class="nav-text">Planejamento</span>
           </a>
@@ -71,39 +69,46 @@
       <main class="main-panel">
         <header class="topbar">
           <div class="topbar__title-wrap">
-            <p class="eyebrow">Visão Geral Kaizen</p>
-            <h1>Início - Dashboard 5S</h1>
+            <p class="eyebrow">Plataforma de organizacao</p>
+            <h1>Estudos</h1>
           </div>
         </header>
 
-        <section class="dashboard-grid" aria-label="Visao geral da plataforma">
+        <section class="dashboard-grid" aria-label="Visao geral de estudos">
           <article class="panel-card panel-card--feature">
-            <h2>Bem-vindo à sua Central!</h2>
+            <h2>Central de Estudos</h2>
             <p>
-              Transforme a sua rotina agora mesmo. O framework base foi estabelecido e modularizado perfeitamente para receber todas as outras sessões em breve.
+              Modelo focado em rotina, metas semanais, trilhas de conteudo e revisao.
             </p>
-            <a href="src/pages/estudos.html" class="cta" style="text-decoration: none; display: inline-block; text-align: center;">Retomar Estudos</a>
+            <button type="button" class="cta">Criar bloco de estudo</button>
           </article>
 
           <article class="panel-card">
-            <h3>Progresso Geral</h3>
-            <p>Sua disciplina perante as metas 5S nesta semana.</p>
+            <h3>Meta da semana</h3>
+            <p>Concluir 4 modulos e revisar 2 simulados.</p>
             <div class="progress-track" aria-label="Progresso semanal">
-              <span style="width: 85%"></span>
+              <span style="width: 64%"></span>
             </div>
           </article>
 
           <article class="panel-card">
-            <h3>Centro de Notificações</h3>
+            <h3>Proxima revisao</h3>
+            <p>Direito Constitucional - Quinta, 19:30</p>
+            <p class="tag">Prioridade alta</p>
+          </article>
+
+          <article class="panel-card">
+            <h3>Foco de hoje</h3>
             <ul>
-              <li>⚠️ Aula sobre "Senso de Utilização" pendente.</li>
-              <li>✅ Cronograma da semana arquivado: Sucesso.</li>
+              <li>Pomodoro 1: Teoria</li>
+              <li>Pomodoro 2: Exercicios</li>
+              <li>Pomodoro 3: Revisao ativa</li>
             </ul>
           </article>
         </section>
       </main>
     </div>
 
-    <script src="src/scripts/script.js"></script>
+    <script src="../scripts/script.js"></script>
   </body>
 </html>
