@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Perfil e Gamificação - Kaizen 5S</title>
+    <link rel="icon" type="image/svg+xml" href="../../assets/kaizen-favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Sora:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../styles/styles.css" />
+    <style>
+      .perfil-layout {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+
+      .perfil-card {
+        background: linear-gradient(172deg, rgba(17, 22, 36, 0.95), rgba(13, 15, 23, 0.92));
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        padding: 18px;
+      }
+
+      .perfil-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .perfil-avatar {
+        width: 78px;
+        height: 78px;
+        border-radius: 999px;
+        border: 2px solid rgba(0, 229, 255, 0.35);
+        background: radial-gradient(circle at 30% 20%, #1c2642 0%, #0f131f 70%);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Sora", sans-serif;
+        font-weight: 700;
+        color: var(--neon-cyan);
+        letter-spacing: 0.08em;
+      }
+
+      .perfil-main {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        min-width: 0;
+      }
+
+      .perfil-name {
+        font-size: clamp(1.15rem, 0.95rem + 0.8vw, 1.5rem);
+      }
+
+      .perfil-meta {
+        color: var(--text-soft);
+        font-size: 0.9rem;
+      }
+
+      .perfil-id-wrap {
+        margin-left: auto;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+
+      .perfil-id {
+        border: 1px solid rgba(0, 229, 255, 0.25);
+        background: rgba(0, 229, 255, 0.08);
+        color: var(--neon-cyan);
+        border-radius: 999px;
+        padding: 6px 10px;
+        font-size: 0.86rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+      }
+
+      .btn-inline {
+        border: 1px solid var(--line);
+        background: #101522;
+        color: var(--text-main);
+        border-radius: 8px;
+        padding: 7px 10px;
+        font-family: inherit;
+        font-size: 0.82rem;
+        cursor: pointer;
+        transition: border-color 0.2s ease, color 0.2s ease;
+      }
+
+      .btn-inline:hover {
+        border-color: var(--neon-cyan);
+        color: var(--neon-cyan);
+      }
+
+      .copy-feedback {
+        min-width: 72px;
+        color: var(--neon-lime);
+        font-size: 0.78rem;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .stat-card {
+        grid-column: span 6;
+        background: var(--bg-panel-strong);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-md);
+        padding: 14px;
+      }
+
+      .stat-card h3 {
+        font-size: 0.92rem;
+        color: var(--text-soft);
+        margin-bottom: 10px;
+      }
+
+      .stat-big {
+        font-family: "Sora", sans-serif;
+        font-size: 1.45rem;
+        color: var(--text-main);
+      }
+
+      .stat-sub {
+        margin-top: 4px;
+        color: var(--text-soft);
+        font-size: 0.83rem;
+      }
+
+      .xp-progress {
+        margin-top: 8px;
+        width: 100%;
+        height: 10px;
+        border-radius: 999px;
+        background: #1d2539;
+        overflow: hidden;
+      }
+
+      .xp-progress > span {
+        display: block;
+        height: 100%;
+        width: 0;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--neon-cyan), var(--neon-lime));
+        transition: width 0.35s ease;
+      }
+
+      .perfil-duo {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .social-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .social-row input {
+        flex: 1;
+        min-width: 180px;
+        border: 1px solid var(--line);
+        background: #0e1320;
+        color: var(--text-main);
+        border-radius: 8px;
+        padding: 10px 12px;
+        font-family: inherit;
+      }
+
+      .social-row input:focus {
+        outline: none;
+        border-color: var(--neon-cyan);
+      }
+
+      .social-status {
+        margin-top: 8px;
+        min-height: 18px;
+        color: var(--text-soft);
+        font-size: 0.82rem;
+      }
+
+      .mailbox-list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .mailbox-item {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: #101626;
+        padding: 10px 12px;
+      }
+
+      .mailbox-item strong {
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .mailbox-item p {
+        color: var(--text-soft);
+        font-size: 0.85rem;
+      }
+
+      .timeline {
+        list-style: none;
+        margin: 2px 0 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .timeline-item {
+        display: grid;
+        grid-template-columns: 18px minmax(0, 1fr);
+        gap: 10px;
+      }
+
+      .timeline-marker {
+        position: relative;
+      }
+
+      .timeline-marker::before {
+        content: "";
+        position: absolute;
+        top: 1px;
+        left: 6px;
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: var(--neon-cyan);
+        box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.14);
+      }
+
+      .timeline-marker::after {
+        content: "";
+        position: absolute;
+        top: 15px;
+        left: 10px;
+        width: 2px;
+        height: calc(100% + 8px);
+        background: rgba(160, 172, 205, 0.32);
+      }
+
+      .timeline-item:last-child .timeline-marker::after {
+        display: none;
+      }
+
+      .timeline-content {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: #101626;
+        padding: 10px 12px;
+      }
+
+      .timeline-title {
+        font-weight: 700;
+      }
+
+      .timeline-meta {
+        margin-top: 4px;
+        color: var(--text-soft);
+        font-size: 0.82rem;
+      }
+
+      @media (min-width: 860px) {
+        .stat-card {
+          grid-column: span 3;
+        }
+
+        .perfil-duo {
+          grid-template-columns: 1.3fr 1fr;
+        }
+      }
+
+      @media (max-width: 980px) {
+        .perfil-id-wrap {
+          margin-left: 0;
+          justify-content: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bg-glow bg-glow--one" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow--two" aria-hidden="true"></div>
+
+    <div class="app-shell" id="appShell">
+      <aside class="sidebar is-open is-pinned" id="sidebar">
+        <div class="sidebar__head">
+          <div class="brand">
+            <span class="brand__logo"><img src="../../assets/kaizen-logo.png" alt="" class="brand__logo-img" /></span>
+            <span class="brand__name">Kaizen 5S</span>
+          </div>
+          <button class="icon-btn icon-btn--pin" id="sidebarToggle"><span class="pin-shape"></span></button>
+        </div>
+        <a href="perfil.html" class="profile-card is-active">
+          <span class="profile-card__avatar" aria-hidden="true">A</span>
+          <span class="profile-card__meta">
+            <span class="profile-card__name">Aluno</span>
+            <span class="profile-card__coins">🟡 150</span>
+          </span>
+        </a>
+        <nav class="sidebar__nav">
+          <a href="../../index.html" class="nav-item">
+            <span class="nav-icon nav-icon--home"></span><span class="nav-text">Início</span>
+          </a>
+          <a href="estudos.html" class="nav-item">
+            <span class="nav-icon nav-icon--study"></span><span class="nav-text">Estudos</span>
+          </a>
+          <a href="pesquisa.html" class="nav-item">
+            <span class="nav-icon nav-icon--research"></span><span class="nav-text">Pesquisa</span>
+          </a>
+          <a href="financeiro.html" class="nav-item">
+            <span class="nav-icon nav-icon--finance"></span><span class="nav-text">Financeiro</span>
+          </a>
+          <a href="notas.html" class="nav-item">
+            <span class="nav-icon nav-icon--notes"></span><span class="nav-text">Notas</span>
+          </a>
+          <a href="planejamento.html" class="nav-item">
+            <span class="nav-icon nav-icon--calendar"></span><span class="nav-text">Planejamento</span>
+          </a>
+        </nav>
+      </aside>
+
+      <main class="main-panel">
+        <header class="topbar">
+          <div class="topbar__title-wrap">
+            <p class="eyebrow">Identidade e Progressão</p>
+            <h1>Perfil e Gamificação</h1>
+          </div>
+        </header>
+
+        <section class="perfil-layout" aria-label="Painel de perfil e gamificação">
+          <article class="perfil-card perfil-header">
+            <div class="perfil-avatar" id="profileAvatar" aria-hidden="true">K5</div>
+            <div class="perfil-main">
+              <h2 class="perfil-name" id="profileName">Carregando perfil...</h2>
+              <p class="perfil-meta" id="profileLevel">Lvl --</p>
+            </div>
+            <div class="perfil-id-wrap">
+              <span class="perfil-id" id="profileRegionalId">KZN-XX-0000</span>
+              <button type="button" class="btn-inline" id="copyProfileIdBtn">Copiar ID</button>
+              <span class="copy-feedback" id="copyFeedback"></span>
+            </div>
+          </article>
+
+          <article class="perfil-card">
+            <h2>Dashboard de Estatísticas</h2>
+            <div class="stats-grid" style="margin-top: 14px;">
+              <div class="stat-card">
+                <h3>XP para Próximo Nível</h3>
+                <div class="stat-big" id="xpText">0 / 0</div>
+                <div class="xp-progress"><span id="xpFill"></span></div>
+                <div class="stat-sub" id="xpPercent">0%</div>
+              </div>
+              <div class="stat-card">
+                <h3>Moedas Kaizen</h3>
+                <div class="stat-big" id="coinsValue">0</div>
+                <div class="stat-sub">Saldo atual</div>
+              </div>
+              <div class="stat-card">
+                <h3>Temporada x XP Total</h3>
+                <div class="stat-big" id="seasonVsTotal">0 / 0</div>
+                <div class="stat-sub">Pontuação da temporada</div>
+              </div>
+              <div class="stat-card">
+                <h3>Ranking Semanal</h3>
+                <div class="stat-big" id="weeklyRank">--</div>
+                <div class="stat-sub">Posição atual</div>
+              </div>
+            </div>
+          </article>
+
+          <div class="perfil-duo">
+            <article class="perfil-card">
+              <h2>Social</h2>
+              <p class="stat-sub" style="margin-top: 8px;">Adicionar amigo por ID, com mínimo atrito.</p>
+              <div class="social-row" style="margin-top: 12px;">
+                <input type="text" id="friendIdInput" placeholder="Ex.: KZN-SP-8492" autocomplete="off" />
+                <button type="button" class="btn-inline" id="addFriendBtn">Adicionar</button>
+              </div>
+              <p class="social-status" id="friendStatus"></p>
+              <p class="stat-sub">Total de amigos: <strong id="friendsCount">0</strong></p>
+            </article>
+
+            <article class="perfil-card">
+              <h2>Correio Digital</h2>
+              <ul class="mailbox-list" id="mailboxList" style="margin-top: 12px;"></ul>
+            </article>
+          </div>
+
+          <article class="perfil-card">
+            <h2>Histórico de Evolução</h2>
+            <ul class="timeline" id="timelineList" style="margin-top: 12px;"></ul>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <script src="../scripts/script.js"></script>
+    <script src="../scripts/perfil.js"></script>
+  </body>
+</html>
