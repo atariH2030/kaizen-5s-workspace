@@ -21,7 +21,7 @@
             <span class="brand__logo"><img src="../../assets/kaizen-logo.png" alt="" class="brand__logo-img" /></span>
             <span class="brand__name">Kaizen 5S</span>
           </div>
-          <button class="icon-btn icon-btn--pin" id="sidebarToggle"><span class="pin-shape"></span></button>
+          <button class="icon-btn icon-btn--pin" id="sidebarToggle" aria-label="Alternar menu lateral" title="Alternar menu lateral"><span class="pin-shape"></span></button>
         </div>
         <a href="perfil.html" class="profile-card">
           <span class="profile-card__avatar" aria-hidden="true">A</span>
@@ -59,14 +59,85 @@
             <h1>Financeiro</h1>
           </div>
         </header>
-        <section class="dashboard-grid">
-          <article class="panel-card panel-card--feature">
-            <h2>Módulo em Construção</h2>
-            <p>Em breve, gerencie seus custos, bolsas e despesas alinhado às práticas do 5S.</p>
+        <section class="finance-dashboard" aria-label="Dashboard Financeiro">
+          <div class="finance-top">
+            <article class="finance-filters panel-card" aria-label="Filtros de período">
+              <h2>Período</h2>
+              <div class="filter-group" role="group" aria-label="Selecionar período financeiro">
+                <button class="filter-btn is-active" type="button" data-period="mes">Mês</button>
+                <button class="filter-btn" type="button" data-period="semestre">Semestre</button>
+                <button class="filter-btn" type="button" data-period="ano">Ano</button>
+              </div>
+            </article>
+
+            <div class="summary-grid" aria-label="Resumo financeiro">
+              <article class="panel-card finance-summary-card finance-summary-card--saldo">
+                <p class="summary-label">Saldo Atual</p>
+                <strong id="summarySaldo">R$ 0,00</strong>
+              </article>
+              <article class="panel-card finance-summary-card finance-summary-card--entrada">
+                <p class="summary-label">Total de Entradas</p>
+                <strong id="summaryEntradas">R$ 0,00</strong>
+              </article>
+              <article class="panel-card finance-summary-card finance-summary-card--saida">
+                <p class="summary-label">Total de Saídas</p>
+                <strong id="summarySaidas">R$ 0,00</strong>
+              </article>
+            </div>
+          </div>
+
+          <article class="panel-card finance-chart-card" aria-label="Distribuição de Saídas por Categoria">
+            <div class="finance-chart-card__head">
+              <h2>Distribuição de Saídas</h2>
+              <span class="tag" id="chartPeriodLabel">Mês</span>
+            </div>
+            <div class="finance-chart-wrap">
+              <canvas id="expenseDonutChart" aria-label="Gráfico de rosca das saídas por categoria"></canvas>
+            </div>
           </article>
+
+          <section class="finance-quadrants" aria-label="Quadrantes de categorias financeiras">
+            <article class="panel-card quadrant-card" data-category="Gastos Fixos">
+              <header class="quadrant-card__head">
+                <h3>Gastos Fixos</h3>
+                <button type="button" class="quick-add-btn" data-add-category="Gastos Fixos" aria-label="Adicionar gasto fixo">+</button>
+              </header>
+              <p class="quadrant-total" id="total-gastos-fixos">R$ 0,00</p>
+              <ul class="quadrant-list" id="list-gastos-fixos"></ul>
+            </article>
+
+            <article class="panel-card quadrant-card" data-category="Gastos Variáveis">
+              <header class="quadrant-card__head">
+                <h3>Gastos Variáveis</h3>
+                <button type="button" class="quick-add-btn" data-add-category="Gastos Variáveis" aria-label="Adicionar gasto variável">+</button>
+              </header>
+              <p class="quadrant-total" id="total-gastos-variaveis">R$ 0,00</p>
+              <ul class="quadrant-list" id="list-gastos-variaveis"></ul>
+            </article>
+
+            <article class="panel-card quadrant-card" data-category="Reserva de Emergência">
+              <header class="quadrant-card__head">
+                <h3>Reserva de Emergência</h3>
+                <button type="button" class="quick-add-btn" data-add-category="Reserva de Emergência" aria-label="Adicionar reserva de emergência">+</button>
+              </header>
+              <p class="quadrant-total" id="total-reserva-emergencia">R$ 0,00</p>
+              <ul class="quadrant-list" id="list-reserva-emergencia"></ul>
+            </article>
+
+            <article class="panel-card quadrant-card" data-category="Investimentos">
+              <header class="quadrant-card__head">
+                <h3>Investimentos</h3>
+                <button type="button" class="quick-add-btn" data-add-category="Investimentos" aria-label="Adicionar investimento">+</button>
+              </header>
+              <p class="quadrant-total" id="total-investimentos">R$ 0,00</p>
+              <ul class="quadrant-list" id="list-investimentos"></ul>
+            </article>
+          </section>
         </section>
       </main>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
     <script src="../scripts/script.js"></script>
+    <script src="../scripts/financeiro.js"></script>
   </body>
 </html>
