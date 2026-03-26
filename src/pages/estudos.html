@@ -3,6 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="../scripts/config.js"></script>
+    <script src="../scripts/auth_guard.js"></script>
     <title>Estudos - Kaizen 5S</title>
     <link rel="icon" type="image/svg+xml" href="../../assets/kaizen-favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -368,7 +371,7 @@
             <span class="brand__logo"><img src="../../assets/kaizen-logo.png" alt="" class="brand__logo-img" /></span>
             <span class="brand__name">Kaizen 5S</span>
           </div>
-          <button class="icon-btn icon-btn--pin" id="sidebarToggle"><span class="pin-shape"></span></button>
+          <button class="icon-btn icon-btn--pin" id="sidebarToggle" aria-label="Alternar menu lateral" title="Alternar menu lateral"><span class="pin-shape"></span></button>
         </div>
         <a href="perfil.html" class="profile-card">
           <span class="profile-card__avatar" aria-hidden="true">A</span>
@@ -396,6 +399,9 @@
           <a href="planejamento.html" class="nav-item">
             <span class="nav-icon nav-icon--calendar"></span><span class="nav-text">Planejamento</span>
           </a>
+          <button class="nav-item nav-item--logout" type="button" onclick="handleLogout()" aria-label="Sair da sessão">
+            <span class="nav-icon" aria-hidden="true"></span><span class="nav-text">Sair</span>
+          </button>
         </nav>
       </aside>
 
@@ -408,9 +414,9 @@
         </header>
 
         <!-- 2S: Atrito Zero - Captura Rápida de Tarefas -->
-        <section class="quick-capture-form" style="margin-top: 24px;">
+        <section class="quick-capture-form quick-capture-form--offset">
           <input type="text" id="newTaskInput" class="quick-capture-input" placeholder="O que você precisa estudar ou fazer? (Pressione Enter para salvar)" autocomplete="off" />
-          <select id="subjectSelect" class="quick-capture-select">
+          <select id="subjectSelect" class="quick-capture-select" aria-label="Selecionar matéria" title="Selecionar matéria">
             <option value="" disabled selected>Selecione a Matéria</option>
             <!-- Preenchido via JS -->
           </select>
@@ -422,7 +428,7 @@
             <h2>Tarefas Pendentes</h2>
             <ul class="tasks-list" id="tasksList">
               <!-- Tarefas renderizadas via JS -->
-              <li style="color: var(--text-soft); font-size: 0.9rem; text-align: center; padding: 20px;">Carregando tarefas...</li>
+              <li class="tasks-list__loading">Carregando tarefas...</li>
             </ul>
           </article>
 
@@ -431,7 +437,7 @@
             <h2>Matérias em Andamento</h2>
             <div class="subjects-grid" id="subjectsGrid">
               <!-- Matérias renderizadas via JS -->
-              <p style="color: var(--text-soft); font-size: 0.9rem;">Carregando matérias...</p>
+              <p class="subjects-grid__loading">Carregando matérias...</p>
             </div>
           </article>
         </section>
@@ -449,6 +455,7 @@
     </div>
 
     <script src="../scripts/script.js"></script>
+    <script src="../scripts/gamification.js"></script>
     <script src="../scripts/estudos.js"></script>
   </body>
 </html>

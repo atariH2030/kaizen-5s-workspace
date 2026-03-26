@@ -57,10 +57,25 @@ CREATE TABLE IF NOT EXISTS public.study_tasks (
     -- (Otimização Eng de Dados) O user_id foi incluído aqui para melhoria expressiva de performance nas políticas de RLS e evitar Sub-Query logic
     user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE, 
     descricao_tarefa TEXT NOT NULL,
-    status TEXT NOT NULL CHECK (status IN ('Pendente', 'Concluída')) DEFAULT 'Pendente',
+    status TEXT NOT NULL CONSTRAINT study_tasks_status_check CHECK (status IN ('Pendente', 'Em Andamento', 'Concluído')) DEFAULT 'Pendente',
     is_archived BOOLEAN NOT NULL DEFAULT false,
     data_criacao TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
+
+-- ==========================================
+-- MIGRAÇÃO DE STATUS (consistência Kanban)
+-- Executar uma vez para bases já existentes
+-- ==========================================
+UPDATE public.study_tasks
+SET status = 'Concluído'
+WHERE status = 'Concluída';
+
+ALTER TABLE public.study_tasks
+DROP CONSTRAINT IF EXISTS study_tasks_status_check;
+
+ALTER TABLE public.study_tasks
+ADD CONSTRAINT study_tasks_status_check
+CHECK (status IN ('Pendente', 'Em Andamento', 'Concluído'));
 
 
 -- ==============================================================================

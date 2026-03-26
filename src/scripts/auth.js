@@ -43,20 +43,8 @@ function setLoadingState(isLoading) {
   submitAuthBtn.textContent = isLoading ? "Aguarde..." : isSignUpMode ? "Criar Conta" : "Entrar";
 }
 
-function getSupabaseConfig() {
-  const globalConfig = window.__SUPABASE_CONFIG__ || {};
-  const metaUrl = document.querySelector('meta[name="supabase-url"]')?.content || "";
-  const metaAnonKey = document.querySelector('meta[name="supabase-anon-key"]')?.content || "";
-
-  const url = (globalConfig.url || metaUrl || "").trim();
-  const anonKey = (globalConfig.anonKey || metaAnonKey || "").trim();
-
-  return { url, anonKey };
-}
-
-const { url: supabaseUrl, anonKey: supabaseAnonKey } = getSupabaseConfig();
-const hasSupabase = Boolean(window.supabase && supabaseUrl && supabaseAnonKey);
-const supabaseClient = hasSupabase ? window.supabase.createClient(supabaseUrl, supabaseAnonKey) : null;
+const supabaseClient = window.getSupabaseClient ? window.getSupabaseClient() : null;
+const hasSupabase = Boolean(supabaseClient);
 
 if (!hasSupabase) {
   showError("Configuração Supabase ausente. Defina URL e ANON KEY para autenticar.");

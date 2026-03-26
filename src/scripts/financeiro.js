@@ -1,20 +1,3 @@
-const mockFinancialData = {
-  transactions: [
-    { id: "t1", tipo: "Entrada", categoria: "Salário", valor: 6200, descricao: "Salário mensal líquido", data: "2026-03-05" },
-    { id: "t2", tipo: "Entrada", categoria: "Freelance", valor: 1300, descricao: "Projeto pontual de front-end", data: "2026-03-12" },
-    { id: "t3", tipo: "Saída", categoria: "Gastos Fixos", valor: 1800, descricao: "Aluguel", data: "2026-03-02" },
-    { id: "t4", tipo: "Saída", categoria: "Gastos Fixos", valor: 220, descricao: "Internet e telefone", data: "2026-03-04" },
-    { id: "t5", tipo: "Saída", categoria: "Gastos Variáveis", valor: 580, descricao: "Supermercado da semana", data: "2026-03-10" },
-    { id: "t6", tipo: "Saída", categoria: "Gastos Variáveis", valor: 210, descricao: "Mobilidade e apps", data: "2026-03-13" },
-    { id: "t7", tipo: "Saída", categoria: "Reserva de Emergência", valor: 700, descricao: "Aporte automático", data: "2026-03-08" },
-    { id: "t8", tipo: "Saída", categoria: "Investimentos", valor: 900, descricao: "ETF internacional", data: "2026-03-15" },
-    { id: "t9", tipo: "Saída", categoria: "Investimentos", valor: 320, descricao: "Renda fixa pós-fixada", data: "2026-02-16" },
-    { id: "t10", tipo: "Saída", categoria: "Gastos Variáveis", valor: 160, descricao: "Lazer de fim de semana", data: "2026-01-20" },
-    { id: "t11", tipo: "Entrada", categoria: "Bônus", valor: 850, descricao: "Bônus por performance", data: "2026-01-28" },
-    { id: "t12", tipo: "Saída", categoria: "Reserva de Emergência", valor: 500, descricao: "Reforço trimestral", data: "2025-11-25" },
-  ],
-};
-
 const categoryMap = [
   { name: "Gastos Fixos", listId: "list-gastos-fixos", totalId: "total-gastos-fixos" },
   { name: "Gastos Variáveis", listId: "list-gastos-variaveis", totalId: "total-gastos-variaveis" },
@@ -24,6 +7,9 @@ const categoryMap = [
 
 let activePeriod = "mes";
 let financeChart = null;
+let allTransactions = [];
+let supabaseClient = null;
+let currentUserId = null;
 
 function formatCurrency(value) {
   return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value);
@@ -48,11 +34,15 @@ function getPeriodLabel() {
   return "Mês";
 }
 
+function parseTransactionDate(transaction) {
+  return new Date(transaction.data);
+}
+
 function getFilteredTransactions() {
   const now = new Date();
 
-  return mockFinancialData.transactions.filter((transaction) => {
-    const transactionDate = new Date(`${transaction.data}T00:00:00`);
+  return allTransactions.filter((transaction) => {
+    const transactionDate = parseTransactionDate(transaction);
 
     if (activePeriod === "mes") {
       return transactionDate.getMonth() === now.getMonth() && transactionDate.getFullYear() === now.getFullYear();
@@ -69,6 +59,110 @@ function getFilteredTransactions() {
 
     return true;
   });
+}
+
+function normalizeTransaction(row) {
+  return {
+    id: row.id,
+    tipo: row.tipo,
+    categoria: row.categoria,
+    valor: Number(row.valor || 0),
+    descricao: row.descricao || "Sem descrição",
+    data: row.data_transacao,
+  };
+}
+
+function getGlobalUserId() {
+  return window.AUTH_USER_ID || window.__AUTH_USER_ID__ || sessionStorage.getItem("kaizen_user_id") || null;
+}
+
+async function resolveUserId() {
+  const globalUserId = getGlobalUserId();
+  if (globalUserId) {
+    return globalUserId;
+  }
+
+  if (!supabaseClient) {
+    return null;
+  }
+
+  const { data, error } = await supabaseClient.auth.getSession();
+  if (error) {
+    return null;
+  }
+
+  const user = data?.session?.user || null;
+  if (!user?.id) {
+    return null;
+  }
+
+  sessionStorage.setItem("kaizen_user_id", user.id);
+  window.AUTH_USER_ID = user.id;
+  window.__AUTH_USER_ID__ = user.id;
+
+  return user.id;
+}
+
+function setLoadingState(isLoading) {
+  if (!isLoading) {
+    return;
+  }
+
+  categoryMap.forEach((category) => {
+    const listElement = document.getElementById(category.listId);
+    if (listElement) {
+      listElement.innerHTML = '<li class="quadrant-empty">⏳ Carregando...</li>';
+    }
+  });
+}
+
+function renderFetchError(message) {
+  categoryMap.forEach((category) => {
+    const listElement = document.getElementById(category.listId);
+    const totalElement = document.getElementById(category.totalId);
+
+    if (totalElement) {
+      totalElement.textContent = formatCurrency(0);
+    }
+
+    if (listElement) {
+      listElement.innerHTML = `<li class="quadrant-empty">${escapeHtml(message)}</li>`;
+    }
+  });
+}
+
+async function fetchTransactions() {
+  if (!supabaseClient) {
+    renderFetchError("Supabase não configurado para o módulo financeiro.");
+    return;
+  }
+
+  setLoadingState(true);
+
+  try {
+    currentUserId = await resolveUserId();
+
+    if (!currentUserId) {
+      renderFetchError("Sessão expirada. Faça login novamente.");
+      return;
+    }
+
+    const { data, error } = await supabaseClient
+      .from("finance_transactions")
+      .select("*")
+      .eq("user_id", currentUserId)
+      .eq("is_archived", false)
+      .order("data_transacao", { ascending: false });
+
+    if (error) {
+      throw error;
+    }
+
+    allTransactions = Array.isArray(data) ? data.map(normalizeTransaction) : [];
+    renderAll();
+  } catch (error) {
+    renderFetchError(error?.message || "Falha ao carregar transações.");
+  }
 }
 
 function getCategoryTotals(transactions) {
@@ -175,6 +269,7 @@ function renderChart() {
 
 function renderCategoryLists() {
   const filteredTransactions = getFilteredTransactions();
+  const hasAnyExpense = filteredTransactions.some((transaction) => transaction.tipo === "Saída");
 
   categoryMap.forEach((category) => {
     const listElement = document.getElementById(category.listId);
@@ -190,7 +285,9 @@ function renderCategoryLists() {
     totalElement.textContent = formatCurrency(totalCategory);
 
     if (!items.length) {
-      listElement.innerHTML = '<li class="quadrant-empty">Sem lançamentos neste período.</li>';
+      listElement.innerHTML = hasAnyExpense
+        ? '<li class="quadrant-empty">Sem lançamentos neste período.</li>'
+        : '<li class="quadrant-empty">Nenhum gasto registrado. Comece no botão +</li>';
       return;
     }
 
@@ -213,12 +310,100 @@ function renderCategoryLists() {
   });
 }
 
-function openAddModal(categoria) {
+async function addTransaction(payload) {
+  if (!supabaseClient) {
+    alert("Supabase não configurado para salvar transações.");
+    return;
+  }
+
+  const userId = currentUserId || (await resolveUserId());
+  if (!userId) {
+    alert("Sessão inválida. Faça login novamente.");
+    return;
+  }
+
+  const { error } = await supabaseClient.from("finance_transactions").insert([
+    {
+      user_id: userId,
+      tipo: payload.tipo,
+      categoria: payload.categoria,
+      descricao: payload.descricao,
+      valor: payload.valor,
+      data_transacao: `${payload.data}T12:00:00`,
+      is_archived: false,
+    },
+  ]);
+
+  if (error) {
+    throw error;
+  }
+
+  await fetchTransactions();
+  renderChart();
 }
 
-function deleteTransaction(transactionId) {
-  mockFinancialData.transactions = mockFinancialData.transactions.filter((transaction) => transaction.id !== transactionId);
-  renderAll();
+async function openAddModal(categoria) {
+  const descricao = window.prompt(`Descrição do lançamento em ${categoria}:`);
+  if (!descricao || !descricao.trim()) {
+    return;
+  }
+
+  const valorRaw = window.prompt("Valor (R$):", "0,00");
+  if (!valorRaw) {
+    return;
+  }
+
+  const valor = Number(valorRaw.replaceAll(".", "").replace(",", "."));
+  if (!Number.isFinite(valor) || valor <= 0) {
+    alert("Informe um valor válido maior que zero.");
+    return;
+  }
+
+  const today = new Date().toISOString().slice(0, 10);
+  const data = window.prompt("Data da transação (AAAA-MM-DD):", today) || today;
+
+  try {
+    await addTransaction({
+      tipo: "Saída",
+      categoria,
+      descricao: descricao.trim(),
+      valor,
+      data,
+    });
+  } catch (error) {
+    alert(error?.message || "Não foi possível salvar a transação.");
+  }
+}
+
+async function deleteTransaction(transactionId) {
+  if (!supabaseClient) {
+    alert("Supabase não configurado para exclusão.");
+    return;
+  }
+
+  if (!window.confirm("Deseja realmente apagar este lançamento?")) {
+    return;
+  }
+
+  const userId = currentUserId || (await resolveUserId());
+  if (!userId) {
+    alert("Sessão inválida. Faça login novamente.");
+    return;
+  }
+
+  const { error } = await supabaseClient
+    .from("finance_transactions")
+    .delete()
+    .eq("id", transactionId)
+    .eq("user_id", userId);
+
+  if (error) {
+    alert(error?.message || "Não foi possível apagar o lançamento.");
+    return;
+  }
+
+  await fetchTransactions();
+  renderChart();
 }
 
 function bindEvents() {
@@ -237,13 +422,13 @@ function bindEvents() {
   });
 
   quickAddButtons.forEach((button) => {
-    button.addEventListener("click", () => {
+    button.addEventListener("click", async () => {
       const categoria = button.dataset.addCategory || "";
-      openAddModal(categoria);
+      await openAddModal(categoria);
     });
   });
 
-  document.addEventListener("click", (event) => {
+  document.addEventListener("click", async (event) => {
     const target = event.target;
 
     if (!(target instanceof HTMLElement)) {
@@ -257,7 +442,7 @@ function bindEvents() {
 
     const transactionId = deleteButton.getAttribute("data-id");
     if (transactionId) {
-      deleteTransaction(transactionId);
+      await deleteTransaction(transactionId);
     }
   });
 }
@@ -268,5 +453,10 @@ function renderAll() {
   renderCategoryLists();
 }
 
-bindEvents();
-renderAll();
+async function initFinanceDashboard() {
+  supabaseClient = window.getSupabaseClient ? window.getSupabaseClient() : null;
+  bindEvents();
+  await fetchTransactions();
+}
+
+initFinanceDashboard();
